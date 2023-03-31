@@ -1,6 +1,7 @@
 {
   "dependencies": {
     "com.mygamedevtools.script-template": "3.4.0",
+    "com.unity.charactercontroller": "1.0.0-exp.5",
     "com.unity.cinemachine": "2.9.5",
     "com.unity.entities": "1.0.0-pre.65",
     "com.unity.entities.graphics": "1.0.0-pre.65",
