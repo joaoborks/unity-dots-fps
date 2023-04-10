@@ -113,6 +113,26 @@ public static class FirstPersonCharacterUtilities
         return viewLocalRotation;
     }
 
+    public static void ComputeFinalRotationsFromRotationDelta(
+        ref float3 viewEulerDegrees,
+        float2 yawPitchDeltaDegrees,
+        float minPitchDegrees,
+        float maxPitchDegrees,
+        out float canceledPitchDegrees,
+        out quaternion viewLocalRotation)
+    {
+        // Yaw
+        viewEulerDegrees.y += yawPitchDeltaDegrees.x;
+
+        // Pitch
+        viewEulerDegrees.x += yawPitchDeltaDegrees.y;
+        float viewPitchAngleDegreesBeforeClamp = viewEulerDegrees.x;
+        viewEulerDegrees.x = math.clamp(viewEulerDegrees.x, minPitchDegrees, maxPitchDegrees);
+        canceledPitchDegrees = yawPitchDeltaDegrees.y - (viewPitchAngleDegreesBeforeClamp - viewEulerDegrees.x);
+
+        viewLocalRotation = quaternion.Euler(-math.radians(viewEulerDegrees.x), math.radians(viewEulerDegrees.y), 0);
+    }
+
     public static float3 ComputeTargetLookDirectionFromRotationAngles(
         ref float viewPitchDegrees,
         float minViewPitchDegrees,

@@ -114,14 +114,9 @@ public partial struct FirstPersonPlayerFixedStepControlSystem : ISystem
             if (SystemAPI.HasComponent<FirstPersonCharacterControl>(player.ControlledCharacter))
             {
                 FirstPersonCharacterControl characterControl = SystemAPI.GetComponent<FirstPersonCharacterControl>(player.ControlledCharacter);
-                
-                quaternion characterRotation = SystemAPI.GetComponent<LocalTransform>(player.ControlledCharacter).Rotation;
 
                 // Move
-                float3 characterForward = MathUtilities.GetForwardFromRotation(characterRotation);
-                float3 characterRight = MathUtilities.GetRightFromRotation(characterRotation);
-                characterControl.MoveVector = (playerInputs.ValueRW.MoveInput.y * characterForward) + (playerInputs.ValueRW.MoveInput.x * characterRight);
-                characterControl.MoveVector = MathUtilities.ClampToMaxLength(characterControl.MoveVector, 1f);
+                characterControl.MoveVector = new float3(playerInputs.ValueRW.MoveInput.x, 0, playerInputs.ValueRW.MoveInput.y);
 
                 // Jump
                 // We use the "FixedInputEvent" helper struct here to detect if the event needs to be processed.

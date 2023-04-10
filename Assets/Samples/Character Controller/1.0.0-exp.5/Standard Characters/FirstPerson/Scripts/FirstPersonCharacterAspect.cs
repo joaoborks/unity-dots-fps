@@ -66,17 +66,25 @@ public readonly partial struct FirstPersonCharacterAspect : IAspect, IKinematicC
         ref FirstPersonCharacterComponent characterComponent = ref CharacterComponent.ValueRW;
         ref FirstPersonCharacterControl characterControl = ref CharacterControl.ValueRW;
 
+        float3 moveVector = characterControl.MoveVector;
+
+        var viewRotation = quaternion.Euler(0, math.radians(characterComponent.ViewEulerDegrees.y), 0);
+        float3 characterForward = MathUtilities.GetForwardFromRotation(viewRotation);
+        float3 characterRight = MathUtilities.GetRightFromRotation(viewRotation);
+        moveVector = (moveVector.z * characterForward) + (moveVector.x * characterRight);
+        moveVector = MathUtilities.ClampToMaxLength(moveVector, 1f);
+
         // Rotate move input and velocity to take into account parent rotation
-        if(characterBody.ParentEntity != Entity.Null)
+        if (characterBody.ParentEntity != Entity.Null)
         {
-            characterControl.MoveVector = math.rotate(characterBody.RotationFromParent, characterControl.MoveVector);
+            moveVector = math.rotate(characterBody.RotationFromParent, moveVector);
             characterBody.RelativeVelocity = math.rotate(characterBody.RotationFromParent, characterBody.RelativeVelocity);
         }
         
         if (characterBody.IsGrounded)
         {
             // Move on ground
-            float3 targetVelocity = characterControl.MoveVector * characterComponent.GroundMaxSpeed;
+            float3 targetVelocity = moveVector * characterComponent.GroundMaxSpeed;
             CharacterControlUtilities.StandardGroundMove_Interpolated(ref characterBody.RelativeVelocity, targetVelocity, characterComponent.GroundedMovementSharpness, deltaTime, characterBody.GroundingUp, characterBody.GroundHit.Normal);
 
             // Jump
@@ -88,7 +96,7 @@ public readonly partial struct FirstPersonCharacterAspect : IAspect, IKinematicC
         else
         {
             // Move in air
-            float3 airAcceleration = characterControl.MoveVector * characterComponent.AirAcceleration;
+            float3 airAcceleration = moveVector * characterComponent.AirAcceleration;
             if (math.lengthsq(airAcceleration) > 0f)
             {
                 float3 tmpVelocity = characterBody.RelativeVelocity;
@@ -122,10 +130,8 @@ public readonly partial struct FirstPersonCharacterAspect : IAspect, IKinematicC
 
         // Compute character & view rotations from rotation input
         FirstPersonCharacterUtilities.ComputeFinalRotationsFromRotationDelta(
-            ref characterRotation,
-            ref characterComponent.ViewPitchDegrees,
+            ref characterComponent.ViewEulerDegrees,
             characterControl.LookYawPitchDegrees,
-            0f,
             characterComponent.MinViewAngle,
             characterComponent.MaxViewAngle,
             out float canceledPitchDegrees,

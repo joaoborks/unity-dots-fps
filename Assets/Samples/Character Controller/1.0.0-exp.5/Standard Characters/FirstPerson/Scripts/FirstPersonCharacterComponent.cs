@@ -23,7 +23,7 @@ public struct FirstPersonCharacterComponent : IComponentData
     [HideInInspector]
     public Entity ViewEntity;
     [HideInInspector]
-    public float ViewPitchDegrees;
+    public float3 ViewEulerDegrees;
     [HideInInspector]
     public quaternion ViewLocalRotation;
 
