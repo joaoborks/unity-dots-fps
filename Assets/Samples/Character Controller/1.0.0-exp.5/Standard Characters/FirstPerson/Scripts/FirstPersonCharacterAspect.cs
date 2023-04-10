@@ -67,12 +67,7 @@ public readonly partial struct FirstPersonCharacterAspect : IAspect, IKinematicC
         ref FirstPersonCharacterControl characterControl = ref CharacterControl.ValueRW;
 
         float3 moveVector = characterControl.MoveVector;
-
-        var viewRotation = quaternion.Euler(0, math.radians(characterComponent.ViewEulerDegrees.y), 0);
-        float3 characterForward = MathUtilities.GetForwardFromRotation(viewRotation);
-        float3 characterRight = MathUtilities.GetRightFromRotation(viewRotation);
-        moveVector = (moveVector.z * characterForward) + (moveVector.x * characterRight);
-        moveVector = MathUtilities.ClampToMaxLength(moveVector, 1f);
+        moveVector = math.rotate(quaternion.Euler(0, math.radians(characterComponent.ViewEulerDegrees.y), 0), moveVector);
 
         // Rotate move input and velocity to take into account parent rotation
         if (characterBody.ParentEntity != Entity.Null)
