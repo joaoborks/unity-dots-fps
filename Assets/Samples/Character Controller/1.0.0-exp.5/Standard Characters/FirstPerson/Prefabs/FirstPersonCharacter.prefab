@@ -136,8 +136,8 @@ MonoBehaviour:
     y: 1
     z: 0
   m_PrimitiveSize:
-    x: 1
-    y: 1
+    x: 0.7
+    y: 0.7
     z: 2
   m_PrimitiveOrientation:
     Value:
@@ -147,11 +147,11 @@ MonoBehaviour:
     RotationOrder: 4
   m_Capsule:
     Height: 2
-    Radius: 0.5
+    Radius: 0.35
     Axis: 2
   m_Cylinder:
     Height: 2
-    Radius: 0.5
+    Radius: 0.35
     Axis: 2
   m_CylinderSideCount: 20
   m_SphereRadius: 1
@@ -290,7 +290,7 @@ MonoBehaviour:
     SnapToGround: 1
     GroundSnappingDistance: 0.5
     EnhancedGroundPrecision: 0
-    MaxGroundedSlopeAngle: 60
+    MaxGroundedSlopeAngle: 45
     DetectMovementCollisions: 1
     DecollideFromOverlaps: 1
     ProjectVelocityOnInitialOverlaps: 0
@@ -302,10 +302,10 @@ MonoBehaviour:
     SimulateDynamicBody: 1
     Mass: 1
   Character:
-    GroundMaxSpeed: 10
+    GroundMaxSpeed: 6
     GroundedMovementSharpness: 15
     AirAcceleration: 50
-    AirMaxSpeed: 10
+    AirMaxSpeed: 6
     AirDrag: 0
     JumpSpeed: 10
     Gravity:
@@ -314,7 +314,7 @@ MonoBehaviour:
       z: -0
     PreventAirAccelerationAgainstUngroundedHits: 1
     StepAndSlopeHandling:
-      StepHandling: 0
+      StepHandling: 1
       MaxStepHeight: 0.5
       ExtraStepChecksDistance: 0.1
       CharacterWidthForStepGroundingCheck: 1
@@ -324,7 +324,10 @@ MonoBehaviour:
       ConstrainVelocityToGroundPlane: 1
     MinViewAngle: -90
     MaxViewAngle: 90
-    ViewPitchDegrees: 0
+    ViewEulerDegrees:
+      x: 0
+      y: 0
+      z: 0
     ViewLocalRotation:
       value:
         x: 0
