@@ -307,7 +307,7 @@ MonoBehaviour:
     AirAcceleration: 50
     AirMaxSpeed: 6
     AirDrag: 0
-    JumpSpeed: 10
+    JumpSpeed: 8
     Gravity:
       x: -0
       y: -30
