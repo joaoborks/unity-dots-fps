@@ -4,7 +4,7 @@ using Unity.Entities;
 using Unity.Transforms;
 using UnityEngine.Jobs;
 
-namespace MyFps
+namespace MyFps.Gameplay.Presentation
 {
     [UpdateInGroup(typeof(TransformSystemGroup))]
     public partial class TransformHierarchySyncSystem : SystemBase

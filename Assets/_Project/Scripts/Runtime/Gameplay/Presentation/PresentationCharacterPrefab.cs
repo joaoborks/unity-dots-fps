@@ -1,7 +1,7 @@
 using Unity.Entities;
 using UnityEngine;
 
-namespace MyFps.Gameplay.FirstPerson
+namespace MyFps.Gameplay.Presentation
 {
     public class PresentationCharacterPrefab : IComponentData
     {

@@ -1,9 +1,8 @@
-using MyFps.Gameplay.FirstPerson;
 using Unity.Collections;
 using Unity.Entities;
 using UnityEngine.Jobs;
 
-namespace MyFps
+namespace MyFps.Gameplay.Presentation
 {
     [UpdateInGroup(typeof(InitializationSystemGroup))]
     public partial class TransformHierarchyLinkSystem : SystemBase

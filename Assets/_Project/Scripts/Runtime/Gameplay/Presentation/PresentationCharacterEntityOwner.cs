@@ -1,7 +1,7 @@
 using Unity.Entities;
 using UnityEngine;
 
-namespace MyFps
+namespace MyFps.Gameplay.Presentation
 {
     public class PresentationCharacterEntityOwner : MonoBehaviour
     {

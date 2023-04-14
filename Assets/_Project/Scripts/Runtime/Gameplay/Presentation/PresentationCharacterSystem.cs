@@ -1,10 +1,9 @@
-using MyFps.Gameplay.FirstPerson;
 using System.Collections.Generic;
 using Unity.Collections;
 using Unity.Entities;
 using UnityEngine;
 
-namespace MyFps
+namespace MyFps.Gameplay.Presentation
 {
     [UpdateInGroup(typeof(InitializationSystemGroup), OrderLast = true)]
     public partial class PresentationCharacterSystem : SystemBase

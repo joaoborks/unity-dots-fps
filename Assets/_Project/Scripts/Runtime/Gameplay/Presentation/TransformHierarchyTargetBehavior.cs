@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace MyFps
+namespace MyFps.Gameplay.Presentation
 {
     public class TransformHierarchyTargetBehavior : MonoBehaviour
     {
