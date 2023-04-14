@@ -1,17 +1,14 @@
 using MyFps.Gameplay.FirstPerson;
 using System.Collections.Generic;
-using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
-using Unity.Transforms;
 using UnityEngine;
-using UnityEngine.Jobs;
 
 namespace MyFps
 {
+    [UpdateInGroup(typeof(InitializationSystemGroup), OrderLast = true)]
     public partial class PresentationCharacterSystem : SystemBase
     {
-        public TransformAccessArray Transforms;
         public new NativeList<Entity> Entities;
 
         ComponentLookup<PresentationCharacterState> _stateLookup;
@@ -20,8 +17,7 @@ namespace MyFps
         protected override void OnCreate()
         {
             _gameObjects = new List<GameObject>();
-            Transforms = new TransformAccessArray(8, 8);
-            Entities = new NativeList<Entity>(8, Allocator.Persistent);
+            Entities = new NativeList<Entity>(16, Allocator.Persistent);
             _stateLookup = GetComponentLookup<PresentationCharacterState>();
         }
 
@@ -30,7 +26,6 @@ namespace MyFps
             foreach (var gameObject in _gameObjects)
                 Object.Destroy(gameObject);
 
-            Transforms.Dispose();
             Entities.Dispose();
             _gameObjects.Clear();
         }
@@ -51,7 +46,6 @@ namespace MyFps
 
                     index = _gameObjects.Count;
                     _gameObjects.Add(gameObject);
-                    Transforms.Add(gameObject.transform);
                     Entities.Add(entity);
                 }
                 buffer.AddComponent(entity, new PresentationCharacterState { GameObjectIndex = index });
@@ -63,7 +57,6 @@ namespace MyFps
                 var index = presentationState.ValueRO.GameObjectIndex;
                 if (index >= 0)
                 {
-                    Transforms.RemoveAtSwapBack(index);
                     Entities.RemoveAtSwapBack(index);
                     var last = _gameObjects.Count - 1;
                     Object.Destroy(_gameObjects[index]);
@@ -76,48 +69,15 @@ namespace MyFps
             buffer.Playback(EntityManager);
             buffer.Dispose();
         }
-    }
 
-    [UpdateInGroup(typeof(TransformSystemGroup))]
-    public partial class PresentationCharacterTransformSystem : SystemBase
-    {
-        PresentationCharacterSystem _presentationCharacterSystem;
-        ComponentLookup<LocalTransform> _transformLookup;
-
-        protected override void OnCreate()
+        public GameObject GetGameObjectForEntity(EntityManager entityManager, Entity entity)
         {
-            _presentationCharacterSystem = World.GetExistingSystemManaged<PresentationCharacterSystem>();
-            RequireForUpdate(GetEntityQuery(ComponentType.ReadOnly<PresentationCharacterPrefabReference>()));
-
-            _transformLookup = GetComponentLookup<LocalTransform>(true);
-        }
-
-        protected override void OnUpdate()
-        {
-            _transformLookup.Update(this);
-
-            var transformJob = new TransformUpdateJob
-            {
-                Entities = _presentationCharacterSystem.Entities,
-                TransformFromEntity = _transformLookup,
-            };
-            Dependency = transformJob.Schedule(_presentationCharacterSystem.Transforms, Dependency);
-        }
-
-        [BurstCompile]
-        struct TransformUpdateJob : IJobParallelForTransform
-        {
-            [ReadOnly]
-            public NativeList<Entity> Entities;
-            [ReadOnly]
-            public ComponentLookup<LocalTransform> TransformFromEntity;
-
-            public void Execute(int index, TransformAccess transform)
-            {
-                var ent = Entities[index];
-                transform.localPosition = TransformFromEntity[ent].Position;
-                transform.localRotation = TransformFromEntity[ent].Rotation;
-            }
+            if (!entityManager.HasComponent<PresentationCharacterState>(entity))
+                return null;
+            var index = entityManager.GetComponentData<PresentationCharacterState>(entity).GameObjectIndex;
+            if (index < 0)
+                return null;
+            return _gameObjects[index];
         }
     }
 }
