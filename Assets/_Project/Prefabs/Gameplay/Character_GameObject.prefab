@@ -164,7 +164,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   TransformHierarchy:
   - {fileID: 2741293482273627457}
-  - {fileID: 5167296703894130273}
+  View: {fileID: 5167296703894130273}
 --- !u!1001 &2072637372009396352
 PrefabInstance:
   m_ObjectHideFlags: 0

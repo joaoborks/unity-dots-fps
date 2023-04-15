@@ -17,4 +17,10 @@ namespace MyFps.Gameplay.Presentation
     {
         public int GameObjectIndex;
     }
+
+    [InternalBufferCapacity(4)]
+    public struct PresentationCharacterBuffer : IBufferElementData
+    {
+        public Entity Entity;
+    }
 }

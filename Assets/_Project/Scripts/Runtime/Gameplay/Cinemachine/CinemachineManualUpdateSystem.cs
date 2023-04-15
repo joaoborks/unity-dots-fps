@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace MyFps.Gameplay.Cinemachine
 {
-    [UpdateInGroup(typeof(LateSimulationSystemGroup), OrderFirst = true)]
+    [UpdateInGroup(typeof(PresentationSystemGroup))]
     public partial class CinemachineManualUpdateSystem : SystemBase
     {
         protected override void OnCreate()
