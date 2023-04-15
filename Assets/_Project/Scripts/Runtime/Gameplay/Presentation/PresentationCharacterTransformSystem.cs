@@ -53,7 +53,7 @@ namespace MyFps.Gameplay.Presentation
             foreach (var (view, transform) in SystemAPI.Query<RefRO<FirstPersonCharacterView>, RefRO<LocalToWorld>>())
             {
                 if (_presentationSystem.TryGetBehaviorForEntity(EntityManager, view.ValueRO.CharacterEntity, out var behavior))
-                    behavior.View.SetPositionAndRotation(transform.ValueRO.Position, transform.ValueRO.Rotation);
+                    behavior.View.rotation = transform.ValueRO.Rotation;
             }
         }
     }

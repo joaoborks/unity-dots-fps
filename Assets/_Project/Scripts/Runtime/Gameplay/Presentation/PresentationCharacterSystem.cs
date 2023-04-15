@@ -23,7 +23,8 @@ namespace MyFps.Gameplay.Presentation
         protected override void OnDestroy()
         {
             foreach (var behavior in _presentationBehaviors)
-                Object.Destroy(behavior.gameObject);
+                if (behavior)
+                    Object.Destroy(behavior.gameObject);
 
             _presentationBehaviors.Clear();
         }
