@@ -2,12 +2,18 @@
     "name": "MyFps.Gameplay.FirstPerson",
     "rootNamespace": "",
     "references": [
-        "GUID:b4d5ca2396edae74f80134ebc1bfeda4",
+        "GUID:4d2b3fafd00c3514f80731c18c55e0c4",
         "GUID:2665a8d13d1b3f18800f46e256720795",
+        "GUID:fba13774ff4078041871f6741c062151",
         "GUID:e0cd26848372d4e5c891c569017e11f1",
         "GUID:734d92eba21c94caba915361bd5ac177",
+        "GUID:8819f35a0fc84499b990e90a4ca1911f",
+        "GUID:75469ad4d38634e559750d17036d5f7c",
+        "GUID:d8b63aba1907145bea998dd612889d6b",
         "GUID:63afb046c8423dd448ae7aba042ea63d",
-        "GUID:15fc0a57446b3144c949da3e2b9737a9"
+        "GUID:e00140a815de944528348782854abe39",
+        "GUID:15fc0a57446b3144c949da3e2b9737a9",
+        "GUID:a5baed0c9693541a5bd947d336ec7659"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
