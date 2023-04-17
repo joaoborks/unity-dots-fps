@@ -146,6 +146,34 @@ namespace MyFps.Input
             ]
         },
         {
+            ""name"": ""Combat"",
+            ""id"": ""63085394-d1f6-4770-8e02-864b0de32df1"",
+            ""actions"": [
+                {
+                    ""name"": ""Fire"",
+                    ""type"": ""Button"",
+                    ""id"": ""d7a6eee7-45c7-4f45-b7d4-5756a5e8ac89"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""038cddcd-655b-4e57-a50c-7531dfb3b6ab"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Fire"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
+        },
+        {
             ""name"": ""UserInterface"",
             ""id"": ""9f10a8ef-c528-4489-9e15-4c34d110d645"",
             ""actions"": [
@@ -200,6 +228,9 @@ namespace MyFps.Input
             // Camera
             m_Camera = asset.FindActionMap("Camera", throwIfNotFound: true);
             m_Camera_FreeLook = m_Camera.FindAction("FreeLook", throwIfNotFound: true);
+            // Combat
+            m_Combat = asset.FindActionMap("Combat", throwIfNotFound: true);
+            m_Combat_Fire = m_Combat.FindAction("Fire", throwIfNotFound: true);
             // UserInterface
             m_UserInterface = asset.FindActionMap("UserInterface", throwIfNotFound: true);
             m_UserInterface_ToggleMenu = m_UserInterface.FindAction("ToggleMenu", throwIfNotFound: true);
@@ -361,6 +392,52 @@ namespace MyFps.Input
         }
         public CameraActions @Camera => new CameraActions(this);
 
+        // Combat
+        private readonly InputActionMap m_Combat;
+        private List<ICombatActions> m_CombatActionsCallbackInterfaces = new List<ICombatActions>();
+        private readonly InputAction m_Combat_Fire;
+        public struct CombatActions
+        {
+            private @GameplayInput m_Wrapper;
+            public CombatActions(@GameplayInput wrapper) { m_Wrapper = wrapper; }
+            public InputAction @Fire => m_Wrapper.m_Combat_Fire;
+            public InputActionMap Get() { return m_Wrapper.m_Combat; }
+            public void Enable() { Get().Enable(); }
+            public void Disable() { Get().Disable(); }
+            public bool enabled => Get().enabled;
+            public static implicit operator InputActionMap(CombatActions set) { return set.Get(); }
+            public void AddCallbacks(ICombatActions instance)
+            {
+                if (instance == null || m_Wrapper.m_CombatActionsCallbackInterfaces.Contains(instance)) return;
+                m_Wrapper.m_CombatActionsCallbackInterfaces.Add(instance);
+                @Fire.started += instance.OnFire;
+                @Fire.performed += instance.OnFire;
+                @Fire.canceled += instance.OnFire;
+            }
+
+            private void UnregisterCallbacks(ICombatActions instance)
+            {
+                @Fire.started -= instance.OnFire;
+                @Fire.performed -= instance.OnFire;
+                @Fire.canceled -= instance.OnFire;
+            }
+
+            public void RemoveCallbacks(ICombatActions instance)
+            {
+                if (m_Wrapper.m_CombatActionsCallbackInterfaces.Remove(instance))
+                    UnregisterCallbacks(instance);
+            }
+
+            public void SetCallbacks(ICombatActions instance)
+            {
+                foreach (var item in m_Wrapper.m_CombatActionsCallbackInterfaces)
+                    UnregisterCallbacks(item);
+                m_Wrapper.m_CombatActionsCallbackInterfaces.Clear();
+                AddCallbacks(instance);
+            }
+        }
+        public CombatActions @Combat => new CombatActions(this);
+
         // UserInterface
         private readonly InputActionMap m_UserInterface;
         private List<IUserInterfaceActions> m_UserInterfaceActionsCallbackInterfaces = new List<IUserInterfaceActions>();
@@ -423,6 +500,10 @@ namespace MyFps.Input
         public interface ICameraActions
         {
             void OnFreeLook(InputAction.CallbackContext context);
+        }
+        public interface ICombatActions
+        {
+            void OnFire(InputAction.CallbackContext context);
         }
         public interface IUserInterfaceActions
         {

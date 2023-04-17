@@ -122,6 +122,34 @@
             ]
         },
         {
+            "name": "Combat",
+            "id": "63085394-d1f6-4770-8e02-864b0de32df1",
+            "actions": [
+                {
+                    "name": "Fire",
+                    "type": "Button",
+                    "id": "d7a6eee7-45c7-4f45-b7d4-5756a5e8ac89",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "038cddcd-655b-4e57-a50c-7531dfb3b6ab",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Fire",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
             "name": "UserInterface",
             "id": "9f10a8ef-c528-4489-9e15-4c34d110d645",
             "actions": [
