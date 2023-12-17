@@ -1,12 +1,10 @@
 using Unity.CharacterController;
 using Unity.Entities;
-using Unity.Physics.Authoring;
 using UnityEngine;
 
 namespace MyFps.Gameplay.FirstPerson
 {
     [DisallowMultipleComponent]
-    [RequireComponent(typeof(PhysicsShapeAuthoring))]
     public class CharacterAuthoring : MonoBehaviour
     {
         public GameObject ViewEntity;

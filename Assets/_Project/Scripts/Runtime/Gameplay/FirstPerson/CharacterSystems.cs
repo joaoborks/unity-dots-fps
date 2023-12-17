@@ -59,7 +59,7 @@ namespace MyFps.Gameplay.FirstPerson
             public CharacterUpdateContext Context;
             public KinematicCharacterUpdateContext BaseContext;
 
-            void Execute(ref CharacterAspect characterAspect)
+            void Execute(CharacterAspect characterAspect)
             {
                 characterAspect.PhysicsUpdate(ref Context, ref BaseContext);
             }
@@ -76,7 +76,9 @@ namespace MyFps.Gameplay.FirstPerson
         }
     }
 
-    [UpdateInGroup(typeof(KinematicCharacterVariableUpdateGroup))]
+    [UpdateInGroup(typeof(SimulationSystemGroup))]
+    [UpdateAfter(typeof(FixedStepSimulationSystemGroup))]
+    [UpdateBefore(typeof(TransformSystemGroup))]
     [BurstCompile]
     public partial struct CharacterVariableUpdateSystem : ISystem
     {
@@ -132,7 +134,7 @@ namespace MyFps.Gameplay.FirstPerson
             public CharacterUpdateContext Context;
             public KinematicCharacterUpdateContext BaseContext;
 
-            void Execute(ref CharacterAspect characterAspect)
+            void Execute(CharacterAspect characterAspect)
             {
                 characterAspect.VariableUpdate(ref Context, ref BaseContext);
             }
