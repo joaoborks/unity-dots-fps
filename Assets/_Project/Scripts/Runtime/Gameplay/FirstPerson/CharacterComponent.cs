@@ -21,10 +21,11 @@ namespace MyFps.Gameplay.FirstPerson
 
         public float MinViewAngle;
         public float MaxViewAngle;
+        public float CameraHeight;
         [HideInInspector]
         public Entity ViewEntity;
         [HideInInspector]
-        public float3 ViewEulerDegrees;
+        public float ViewPitchDegrees;
         [HideInInspector]
         public quaternion ViewLocalRotation;
 
@@ -44,6 +45,7 @@ namespace MyFps.Gameplay.FirstPerson
 
                 MinViewAngle = -90f,
                 MaxViewAngle = 90f,
+                CameraHeight = 1.5f
             };
         }
     }

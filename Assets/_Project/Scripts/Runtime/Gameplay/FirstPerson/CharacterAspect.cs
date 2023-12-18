@@ -57,20 +57,17 @@ namespace MyFps.Gameplay.FirstPerson
             ref CharacterComponent characterComponent = ref CharacterComponent.ValueRW;
             ref CharacterControl characterControl = ref CharacterControl.ValueRW;
 
-            float3 moveVector = characterControl.MoveVector;
-            moveVector = math.rotate(quaternion.Euler(0, math.radians(characterComponent.ViewEulerDegrees.y), 0), moveVector);
-
             // Rotate move input and velocity to take into account parent rotation
             if (characterBody.ParentEntity != Entity.Null)
             {
-                moveVector = math.rotate(characterBody.RotationFromParent, moveVector);
+                characterControl.MoveVector = math.rotate(characterBody.RotationFromParent, characterControl.MoveVector);
                 characterBody.RelativeVelocity = math.rotate(characterBody.RotationFromParent, characterBody.RelativeVelocity);
             }
 
             if (characterBody.IsGrounded)
             {
                 // Move on ground
-                float3 targetVelocity = moveVector * characterComponent.GroundMaxSpeed;
+                float3 targetVelocity = characterControl.MoveVector * characterComponent.GroundMaxSpeed;
                 CharacterControlUtilities.StandardGroundMove_Interpolated(ref characterBody.RelativeVelocity, targetVelocity, characterComponent.GroundedMovementSharpness, deltaTime, characterBody.GroundingUp, characterBody.GroundHit.Normal);
 
                 // Jump
@@ -82,7 +79,7 @@ namespace MyFps.Gameplay.FirstPerson
             else
             {
                 // Move in air
-                float3 airAcceleration = moveVector * characterComponent.AirAcceleration;
+                float3 airAcceleration = characterControl.MoveVector * characterComponent.AirAcceleration;
                 if (math.lengthsq(airAcceleration) > 0f)
                 {
                     float3 tmpVelocity = characterBody.RelativeVelocity;
@@ -116,8 +113,10 @@ namespace MyFps.Gameplay.FirstPerson
 
             // Compute character & view rotations from rotation input
             CharacterUtilities.ComputeFinalRotationsFromRotationDelta(
-                ref characterComponent.ViewEulerDegrees,
+                ref characterRotation,
+                ref characterComponent.ViewPitchDegrees,
                 characterControl.LookYawPitchDegrees,
+                0,
                 characterComponent.MinViewAngle,
                 characterComponent.MaxViewAngle,
                 out float canceledPitchDegrees,

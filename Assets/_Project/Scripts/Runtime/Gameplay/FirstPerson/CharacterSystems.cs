@@ -3,6 +3,7 @@ using Unity.Burst.Intrinsics;
 using Unity.CharacterController;
 using Unity.Collections;
 using Unity.Entities;
+using Unity.Mathematics;
 using Unity.Physics;
 using Unity.Transforms;
 
@@ -33,10 +34,6 @@ namespace MyFps.Gameplay.FirstPerson
             state.RequireForUpdate(_characterQuery);
             state.RequireForUpdate<PhysicsWorldSingleton>();
         }
-
-        [BurstCompile]
-        public void OnDestroy(ref SystemState state)
-        { }
 
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
@@ -70,9 +67,7 @@ namespace MyFps.Gameplay.FirstPerson
                 return true;
             }
 
-            public void OnChunkEnd(in ArchetypeChunk chunk, int unfilteredChunkIndex, bool useEnabledMask, in v128 chunkEnabledMask, bool chunkWasExecuted)
-            {
-            }
+            public void OnChunkEnd(in ArchetypeChunk chunk, int unfilteredChunkIndex, bool useEnabledMask, in v128 chunkEnabledMask, bool chunkWasExecuted) {}
         }
     }
 
@@ -104,10 +99,6 @@ namespace MyFps.Gameplay.FirstPerson
         }
 
         [BurstCompile]
-        public void OnDestroy(ref SystemState state)
-        { }
-
-        [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
             _context.OnSystemUpdate(ref state);
@@ -122,7 +113,7 @@ namespace MyFps.Gameplay.FirstPerson
 
             CharacterViewJob viewJob = new CharacterViewJob
             {
-                FirstPersonCharacterLookup = SystemAPI.GetComponentLookup<CharacterComponent>(true),
+                CharacterLookup = SystemAPI.GetComponentLookup<CharacterComponent>(true),
             };
             viewJob.ScheduleParallel();
         }
@@ -145,8 +136,7 @@ namespace MyFps.Gameplay.FirstPerson
                 return true;
             }
 
-            public void OnChunkEnd(in ArchetypeChunk chunk, int unfilteredChunkIndex, bool useEnabledMask, in v128 chunkEnabledMask, bool chunkWasExecuted)
-            { }
+            public void OnChunkEnd(in ArchetypeChunk chunk, int unfilteredChunkIndex, bool useEnabledMask, in v128 chunkEnabledMask, bool chunkWasExecuted) {}
         }
 
         [BurstCompile]
@@ -154,13 +144,14 @@ namespace MyFps.Gameplay.FirstPerson
         public partial struct CharacterViewJob : IJobEntity
         {
             [ReadOnly]
-            public ComponentLookup<CharacterComponent> FirstPersonCharacterLookup;
+            public ComponentLookup<CharacterComponent> CharacterLookup;
 
             void Execute(ref LocalTransform localTransform, in CharacterView characterView)
             {
-                if (FirstPersonCharacterLookup.TryGetComponent(characterView.CharacterEntity, out CharacterComponent character))
+                if (CharacterLookup.TryGetComponent(characterView.CharacterEntity, out CharacterComponent character))
                 {
                     localTransform.Rotation = character.ViewLocalRotation;
+                    localTransform.Position = new float3(0, character.CameraHeight, 0);
                 }
             }
         }

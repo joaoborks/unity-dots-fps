@@ -1,7 +1,9 @@
 using MyFps.Input;
 using Unity.Burst;
+using Unity.CharacterController;
 using Unity.Entities;
 using Unity.Mathematics;
+using Unity.Transforms;
 using UnityEngine;
 
 namespace MyFps.Gameplay.FirstPerson
@@ -66,9 +68,6 @@ namespace MyFps.Gameplay.FirstPerson
             state.RequireForUpdate(SystemAPI.QueryBuilder().WithAll<Player, PlayerInputs>().Build());
         }
 
-        public void OnDestroy(ref SystemState state)
-        { }
-
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
@@ -102,27 +101,27 @@ namespace MyFps.Gameplay.FirstPerson
             state.RequireForUpdate(SystemAPI.QueryBuilder().WithAll<Player, PlayerInputs>().Build());
         }
 
-        public void OnDestroy(ref SystemState state)
-        { }
-
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
             uint fixedTick = SystemAPI.GetSingleton<FixedTickSystem.Singleton>().Tick;
 
-            foreach (var (playerInputs, player) in SystemAPI.Query<RefRW<PlayerInputs>, Player>().WithAll<Simulate>())
+            foreach (var (playerInputs, player) in SystemAPI.Query<PlayerInputs, Player>().WithAll<Simulate>())
             {
                 if (SystemAPI.HasComponent<CharacterControl>(player.ControlledCharacter))
                 {
                     CharacterControl characterControl = SystemAPI.GetComponent<CharacterControl>(player.ControlledCharacter);
 
+                    quaternion characterRotation = SystemAPI.GetComponent<LocalTransform>(player.ControlledCharacter).Rotation;
+                    
                     // Move
-                    characterControl.MoveVector = new float3(playerInputs.ValueRW.MoveInput.x, 0, playerInputs.ValueRW.MoveInput.y);
+                    float3 characterForward = MathUtilities.GetForwardFromRotation(characterRotation);
+                    float3 characterRight = MathUtilities.GetRightFromRotation(characterRotation);
+                    characterControl.MoveVector = (playerInputs.MoveInput.y * characterForward) + (playerInputs.MoveInput.x * characterRight);
+                    characterControl.MoveVector = MathUtilities.ClampToMaxLength(characterControl.MoveVector, 1f);
 
                     // Jump
-                    // We use the "FixedInputEvent" helper struct here to detect if the event needs to be processed.
-                    // This is part of a strategy for proper handling of button press events that are consumed during the fixed update group.
-                    characterControl.Jump = playerInputs.ValueRW.JumpPressed.IsSet(fixedTick);
+                    characterControl.Jump = playerInputs.JumpPressed.IsSet(fixedTick);
 
                     SystemAPI.SetComponent(player.ControlledCharacter, characterControl);
                 }

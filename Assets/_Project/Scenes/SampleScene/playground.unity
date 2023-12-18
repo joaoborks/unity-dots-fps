@@ -3057,6 +3057,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: FirstPerson_Player
       objectReference: {fileID: 0}
+    - target: {fileID: 577874318210893199, guid: 8c22dcbefac332745a1efbea69cb8bfc,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7698645590983583992, guid: 8c22dcbefac332745a1efbea69cb8bfc,
         type: 3}
       propertyPath: ControlledCharacter
@@ -7679,6 +7684,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: FirstPerson_Character
+      objectReference: {fileID: 0}
+    - target: {fileID: 1555240849038293811, guid: e95be3f6ef9cc8243994bdcda968a0e5,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
