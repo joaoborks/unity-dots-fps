@@ -97,7 +97,7 @@ MonoBehaviour:
     KillVelocityWhenExceedMaxIterations: 1
     DetectObstructionsForParentBodyMovement: 0
     SimulateDynamicBody: 1
-    Mass: 1
+    Mass: 80
   Character:
     GroundMaxSpeed: 6
     GroundedMovementSharpness: 15
@@ -121,7 +121,7 @@ MonoBehaviour:
       ConstrainVelocityToGroundPlane: 1
     MinViewAngle: -89
     MaxViewAngle: 89
-    CameraHeight: 1.5
+    CameraHeight: 1.6
     ViewPitchDegrees: 0
     ViewLocalRotation:
       value:
